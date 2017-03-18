@@ -5,6 +5,13 @@ span {
   align-items: center;
 }
 
+#result {
+  width: 100%;
+}
+
+#placeHolder {
+  width: 100%;
+}
 
 
 /*

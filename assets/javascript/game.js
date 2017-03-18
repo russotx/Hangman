@@ -12,8 +12,6 @@ var hangMan = {
   "theWord": "",
   // words already used
   "wordsUsed": [],
-  // efficient search bank of the word's chars
-  "searchBank": {},
   // the user's guess
   "userGuess": "",
 
@@ -38,16 +36,16 @@ var hangMan = {
            var iChar = aString[i].toLowerCase();
            if (obj.hasOwnProperty(iChar)){
             obj[iChar].push(i);
-            //console.log("added another " + iChar + " to array");
-            //console.log("obj."+iChar+" now = "+obj[iChar]);
+            console.log("added another " + iChar + " to array");
+            console.log("obj."+iChar+" now = "+obj[iChar]);
 
             } else {
-              //console.log("first occurrance of " + iChar);
+              console.log("first occurrance of " + iChar);
               obj[iChar]=[];
-              //console.log("created empty array");
+              console.log("created empty array");
               obj[iChar].push(i);
-              //console.log("added " + iChar + " to array");
-              //console.log("obj."+iChar+" now = "+obj[iChar]);
+              console.log("added " + iChar + " to array");
+              console.log("obj."+iChar+" now = "+obj[iChar]);
               }
         }
         for (x in obj){
@@ -91,9 +89,13 @@ var hangMan = {
     this.charsCorrect = 0;
     this.theWord = this.grabWord(this.wordBank);
     console.log("game init: the word is : "+this.theWord);
-    this.searchBank = this.initSearchBank(this.theWord);
+    this.searchBank = Object.assign({},(this.initSearchBank(this.theWord)));
+    for (var x in (this.searchBank)){
+      console.log(this.searchBank[x]);
+    }
     this.displayPlaceholders();
     this.failChances = 6;
+
   },
 
   "getGuess": function(event) {
@@ -128,28 +130,34 @@ var hangMan = {
 
   "displayPlaceholders": function()
   {
-      thePlaceholder = document.getElementById("#placeholder");
+      var thePlaceholder = document.getElementById("placeHolder");
+      console.log("we just created thePlaceholder: "+thePlaceholder);
+      console.log("word length is : "+this.theWord.length);
       for (var x = 0; x < (this.theWord).length; x++)
       {
-        var newS = document.createElement("span");
-        newS.setAttribute("value",this.searchBank[this.theWord[x][0]]);
+        var newS = document.createElement("SPAN");
+        console.log("we just created newS: "+newS);
+        console.log((this.searchBank[(this.theWord[x].toLowerCase())]));
+        newS.setAttribute("class",this.searchBank[this.theWord[x][0]]);
         if (this.searchBank[this.theWord[x]] != " ")
         {
           var node = document.createTextNode("_____ ");
+          newS.appendChild(node);
+          thePlaceholder.appendChild(newS);
         } else
           {
             var node = document.createTextNode("      ");
+            newS.appendChild(node);
+            thePlaceholder.appendChild(newS);
           }
-        newS.appendChild(node);
-        thePlaceholder.appendChild(newS);
       }
-      document.getElementById("#placeholder").innerHTML = newS;
+      thePlaceholder.innerHTML = newS;
   },
 
   "displayLetters": function() {
     for (var i=0; i< (this.searchBank[this.userGuess]).length; i++) {
-      var spaces = document.getElementByID("#placeHolder");
-      if (spaces.value == (this.searchBank[this.userGuess])[i]) {
+      var spaces = document.getElementByID("placeHolder");
+      if (spaces.class == (this.searchBank[this.userGuess])[i]) {
         spaces.innerHTML = "__"+this.userGuess+"__";
       }
     }
@@ -168,7 +176,8 @@ var hangMan = {
   //--- ****** this drives everything: call to run the game ******
   "engine": function()
   {
-    var keyboard = document.getElementById("#keyboard");
+    var keyboard = document.getElementById("keyboard");
+
     this.gameInit();
     console.log(hangMan.theWord);
     console.log(hangMan.userGuess);
