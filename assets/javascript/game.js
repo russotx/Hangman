@@ -40,7 +40,7 @@ var game = {
     //--- will also return the position of spaces
     //--- "trueChars" = the number of characters that aren't spaces.
     //--- pass the word or phrase chosen
-    "initSearchBank" : function (aString) {
+    "initSearchBank" : function(aString) {
         var obj = {"trueChars" : 0};
         for(var i = 0; i < aString.length; i++) {
            var iChar = aString[i].toLowerCase();
@@ -72,20 +72,11 @@ var game = {
       return aString.indexOf(aChar.toLowerCase()) === -1 ? false : true;
     },
 
-    //--- word checker receives a search bank and character
-    //--- returns false if the char doesn't exist in the bank
-    //--- returns an array with the first index holding true and the
-    //---   second index holding an array of that character's indices in the word
-    //-- pass it the search bank and a character
-    "checkWord2" : function(anObj,aChar) {
-      return anObj.hasOwnProperty(aChar) ? ([true,anObj[aChar]],
-                                             this.charsCorrect.push(aChar)) :
-                                             false;
-    },
+
 
     //--- returns the number of spaces in the word/phrase
     // pass the word/phrase
-    "numOfSpaces" : function (aString) {
+    "numOfSpaces" : function(aString) {
       return aString.includes(" ") ? aString.match((/ /g) || []).length
                                            : [0,0];
     },
@@ -105,6 +96,16 @@ var game = {
   },
 
   //---------- game methods -----------
+  //--- word checker receives a search bank and character
+  //--- returns false if the char doesn't exist in the bank
+  //--- returns an array with the first index holding true and the
+  //---   second index holding an array of that character's indices in the word
+  //-- pass it the search bank and a character
+  "checkWord2" : function() {
+    return this.searchBank.hasOwnProperty(this.userGuess) ? ([true,this.searchBank[this.userGuess]],
+                                          this.charsCorrect++) :
+                                          false;
+  },
 
   //--- returns the word for use in the round and flags it as used by
   //--- adding it to the wordsUsed array.
@@ -144,18 +145,6 @@ var game = {
     return  this.charsCorrect === this.searchBank.trueChars[0] ? true : false;
   }
 
-
-/*
-  "gameAction" : function(event,theKeys) {
-    if (event.target === theKeys.toString()) {
-      userGuess = event.target.value.toString();
-      this.checkWord2(this.searchBank,this.userGuess);
-
-    }
-
-  }*/
-
-
 };
 
 //************* end of Game object *******************
@@ -167,7 +156,6 @@ var hangMan = function () {
   game.gameAction(event,keyboard);
   keyboard.addEventListener("click",game.getGuess(event));
   if (game.checkWord2(game.searchBank,game.userGuess)[0] === true) {
-
       game.displayLetters();
   }
   if (game.victory()){
@@ -181,9 +169,5 @@ var hangMan = function () {
 
 
 
-//Go GO Hangman
-if (hangMan() === false) {
-  hangMan();
-}
-
+hangMan();
 
