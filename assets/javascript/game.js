@@ -1,10 +1,9 @@
 
-
-var game = {
+var hangMan = {
 
   //------Game Data---------
   "wordBank"           : ["Willie Nelson","Johnny Cash","Waylon Jennings"],
-  "guessesRemaining"   : 0,  // at least the length of the word + 5
+  "failChances"        : 0,  // number of wrong guesses allowed
   "charsGuessed"       : [], // array of the chars user has guessed
   "charsCorrect"       : 0,  // number of the correct chars the user has guessed
   "theWord"            : "", // the active word that needs to be guessed
@@ -98,13 +97,16 @@ var game = {
   //---------- game methods -----------
   //--- word checker receives a search bank and character
   //--- returns false if the char doesn't exist in the bank
-  //--- returns an array with the first index holding true and the
-  //---   second index holding an array of that character's indices in the word
+  //--- deducts from wrong guesses allowed
+  //--- if correct returns an array with the first index holding true and the
+  //--- second index holding an array of that character's indices in the word
+  //--- increases the correct letter count
   //-- pass it the search bank and a character
   "checkWord2" : function() {
     return this.searchBank.hasOwnProperty(this.userGuess) ? ([true,this.searchBank[this.userGuess]],
                                           this.charsCorrect++) :
-                                          false;
+                                          (this.failChances--,
+                                            false);
   },
 
   //--- returns the word for use in the round and flags it as used by
@@ -122,7 +124,8 @@ var game = {
     this.charsCorrect = [];
     this.theWord = this.grabWord(this.wordBank); //find a random word not used yet.
     this.searchBank = this.helpers.initSearchBank(this.theWord);
-    this.guessesRemaining = searchBank.trueChars + 5; //length of the word not counting spaces + 5
+    this.displayPlaceholders();
+    this.failChances = 6; //chances to guess wrong.
   },
 
   //--- get the guess from an event
@@ -130,44 +133,119 @@ var game = {
   //--- subtract from guesses remaining
   "getGuess" : function(event) {
     this.userGuess = event.target.value.toString();
-    this.charsGuessed.push(aChar);
-    this.guessesRemaining--;
-    console.log("userGuess = "+this.userGuess);
+  },
+
+  //--- tests to see if char was already guessed
+  "validGuess" : function() {
+    if (this.charsGuessed.includes(this.userGuess)) {
+      alert("You already chose that letter dumb dumb.");
+      return false;
+      } else {
+        return true;
+      }
+  },
+
+  //--- adds the guess to the list of chars already guessed
+  "processGuess" : function() {
+        this.charsGuessed.push(this.userGuess);
+        console.log("userGuess = "+this.userGuess);
   },
 
   "gameOver" : function() {
-      return this.guessesRemaining === 0 ? true : false;
+    return this.failChances < 0 ? true : false;
     },
 
   //--- returns true if number of correct guesses = number of chars not spaces
   //
   "victory" : function() {
-    return  this.charsCorrect === this.searchBank.trueChars[0] ? true : false;
+    return this.charsCorrect === this.searchBank.trueChars[0] ? true : false;
+  },
+
+  "displayPlaceholders" : function() {
+      thePlaceholder = document.getElementByID("#placeholder");
+      for(var x = 0; x < this.theWord.length; x++) {
+        var newS = document.createElement("span");
+        newS.setAttribute("value",searchBank[theWord[x][0]]);
+        if (searchBank[theWord[x]] != " ") {
+          var node = document.createTextNode("_____ ");
+        } else {
+            var node = document.createTextNode("      ");
+        }
+        newS.appendChild(node);
+        thePlaceholder.appendChild(newS);
+      }
+
+      document.getElementByID("#placeholder").innerHTML =
+  },
+
+  "displayLetters" : function() {
+    for (var i=0; i< (searchBank[userGuess]).length; i++) {
+      var spaces = document.getElementByID("#placeHolder");
+      if (spaces.value == (searchBank[userGuess])[i]) {
+        spaces.innerHTML = "__"+userGuess+"__";
+      }
+    }
+
+  },
+
+  "displayResult": function() {
+    var youWinBro = "You Win Bro!";
+    var sorryBro = "Awww, words are hard.";
+    if (this.victory()) {
+      document.getElementById("#result").innerHTML = youWinBro;
+    } else
+      document.getElementById("#result").innerHTML = sorryBro;
+  },
+
+  //--- ****** this drives everything: call to run the game ******
+  "engine" : function() {
+    var keyboard = document.querySelector("#keyboard");
+    this.gameInit();
+    keyboard.addEventListener("click", this.getGuess(event));
+    if(this.validGuess()) {
+      this.processGuess();
+      if ((this.checkWord2())[0] === true) {
+        this.displayLetters();
+      } else {
+        alert("Sorry Bro.");
+      }
+      if (this.victory() || this.gameOver()) {
+        this.displayResult();
+        this.gameInit();
+      }
+    }
   }
 
 };
 
 //************* end of Game object *******************
 
-
+/*
 var hangMan = function () {
   var keyboard = document.querySelector("#keyboard");
   game.gameInit();
-  game.gameAction(event,keyboard);
-  keyboard.addEventListener("click",game.getGuess(event));
-  if (game.checkWord2(game.searchBank,game.userGuess)[0] === true) {
+  keyboard.addEventListener("click",game.action());
+}; */
+
+/*
+  if(game.validGuess()) {
+    game.processGuess();
+    if ((game.checkWord2())[0] === true) {
       game.displayLetters();
-  }
-  if (game.victory()){
-    game.displayWin();
-    game.gameInit();
-    } else if (game.gameOver()) {
-      game.displayLose();
-      game.gameInit();
+    } else {
+      alert("Sorry Bro.");
     }
-}
+    if (game.victory()){
+      game.displayWin();
+      game.gameInit();
+    } else if (game.gameOver()) {
+        game.displayLose();
+        game.gameInit();
+    }
+  }
+};*/
 
 
 
-hangMan();
+hangMan.engine();
 
