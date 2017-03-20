@@ -22,24 +22,31 @@
   <!-- the main body: begin content -->
   <main class="entireContent">
 
-    <!-- Primary content -->
-    <section id="mainContent" class="contentArea">
-      <div id="keyboard">
-          <div>
-            <span><h3 value="q">Q</h3><h3 value="w">W</h3><h3 value="e">E</h3><h3 value="r">R</h3><h3 value="t">T</h3><h3 value="y">Y</h3><h3 value="u">U</h3><h3 value="i">I</h3><h3 value="o">O</h3><h3 value="p">P</h3></span>
-          </div>
-          <div>
-            <span><h3 value="a">A</h3><h3 value="s">S</h3><h3 value="d">D</h3><h3 value="f">F</h3><h3 value="g">G</h3><h3 value="h">H</h3><h3 value="j">J</h3><h3 value="k">K</h3><h3 value="l">L</h3></span>
-          </div>
-          <div>
-            <span><h3 value="z">Z</h3><h3 value="x">X</h3><h3 value="c">C</h3><h3 value="v">V</h3><h3 value="b">B</h3><h3 value="n">N</h3><h3 value="m">M</h3></span>
-          </div>
-      </div>
-      <hr>
-      <div id="result"></div>
-      <div id="placeHolder"></div>
-
+    <section id="placeHolder">
+<!--
+      <div class="letSpace"></div><div class="letSpace"></div><div class="letSpace"></div><div class="letSpace"></div>
+-->
     </section>
+
+
+    <section id="result"></section>
+
+    <!-- Primary content -->
+    <article id="mainContent" class="contentArea">
+      <div id="keyboard">
+        <div class="keyRow">
+          <button data="q">Q</button><button data="w">W</button><button data="e">E</button><button data="r">R</button><button data="t">T</button><button data="y">Y</button><button data="u">U</button><button data="i">I</button><button data="o">O</button><button data="p">P</button>
+        </div>
+        <div class="keyRow">
+          <button data="a">A</button><button data="s">S</button><button data="d">D</button><button data="f">F</button><button data="g">G</button><button data="h">H</button><button data="j">J</button><button data="k">K</button><button data="l">L</button>
+        </div>
+        <div class="keyRow">
+          <button data="z">Z</button><button data="x">X</button><button data="c">C</button><button data="v">V</button><button data="b">B</button><button data="n">N</button><button data="m">M</button>
+        </div>
+      </div>
+
+
+    </article>
 
   <!-- no more content past this piont -->
   </main>

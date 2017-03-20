@@ -1,16 +1,80 @@
-span {
+.entireContent {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  width: 100%;
+}
+
+h1 {
+  font-weight: 2em;
+  font-size: 2em;
+  text-align: center;
+}
+
+#mainContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#keyboard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
 }
 
 #result {
-  width: 100%;
+  width: 60%;
+  display: flex;
+  flex-direction: row;
+  margin: 30px auto;
+}
+
+.keyRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 75%;
+  margin: 2px auto;
+}
+
+button {
+  width: 8%;
+  min-height: 20px;
+  margin: 0px 5px;
+  background-color: #6EA8F1;
+  color: #fff;
+  border-bottom: #334C6C;
+  border-left: #334C6C;
+  border-top: none;
+  border-right: none;
+  border-style: solid;
+  border-radius: 11%;
+  border-width: 2px;
 }
 
 #placeHolder {
-  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 0 auto;
+  width: 60%;
+}
+
+.letSpace {
+  width: 50px;
+  height: 4px;
+  background-color: #7C0090;
+  margin: 30px 5px;
+}
+
+
+.justSpace {
+  width: 50px;
+  height: 4px;
+  background-color: rgba(0,0,0,0);
+  margin: 30px 5px;
 }
 
 
