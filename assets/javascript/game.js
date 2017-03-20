@@ -16,6 +16,15 @@ var hangMan = {
   "Cabins",
   "One Rage Every Three Months",
   "Firm Dry Solid Handshakes"],
+  // responses to display when wrong guess
+  "FailResponses":
+  ["Good God son people can see you!",
+  "At least you clearly don't work for the library.",
+  "Perhaps you should be running a shoe shine booth.",
+  "That guess is the salad of guesses.",
+  "Your guesses are as effective as government.",
+  "I would agree with you but then we would both be wrong.",
+  "This is what happens when government controls education."],
   // number of wrong guesses allowed
   "failChances": 0,
   // array of the chars user has guessed
@@ -41,9 +50,9 @@ var hangMan = {
       return anArray[Math.floor(Math.random() * anArray.length)];
     },
 
-    //--- takes a string and returns an object consisting of distinct characters as keys
-    //--- with an array of that characters indices in the given string
-    //--- will also return the position of spaces
+    //--- parse a string into an object consisting of distinct characters as keys
+    //--- with an array of that character's indices in the given string
+    //--- will also return the indices of spaces
     //--- "trueChars" = the number of characters that aren't spaces.
     //--- pass the word or phrase chosen
     //--- ['character', index of char occurence 1, index of char occurence 2, etc...]
@@ -84,7 +93,12 @@ var hangMan = {
   //--- tests to see if char was already guessed
   "validGuess": function(anArray,aChar) {
     if (anArray.includes(aChar)) {
-      alert("You already chose that letter dumb dumb.");
+      var myNode = document.getElementById("result");
+      while (myNode.firstChild) {
+        myNode.removeChild(myNode.firstChild);
+      }
+      var repeatGuess = "You already chose that letter dumb dumb.";
+      document.getElementById("result").innerHTML = repeatGuess;
       return false;
       } else {
         return true;
@@ -107,6 +121,10 @@ var hangMan = {
       // running total for matching to conclude victory. -1 because first index of array is
       // equal to the character.
       this.charsCorrect+=(this.searchBank[this.userGuess]).length-1;
+      var myNode = document.getElementById("result");
+      while (myNode.firstChild) {
+        myNode.removeChild(myNode.firstChild);
+      }
       return true;
     } else {
       this.failChances--;
@@ -195,8 +213,8 @@ var hangMan = {
   },
 
   "displayResult": function() {
-    var youWin = "You did a fine job son.";
-    var youLose = "People are idiots.";
+    var youWin = "Congratulations, you did a fine job son.";
+    var youLose = "People are idiots. Good day sir.";
     if (this.victory()) {
       document.getElementById("result").innerHTML = youWin;
     } else
@@ -206,6 +224,8 @@ var hangMan = {
  "runAction": function(event) {
     // assign the data attribute of the key pressed to userGuess
     // data values are the same as the key letter
+    var playAgain = document.getElementsByClassName("entireContent");
+    console.log(playAgain);
     hangMan.userGuess = event.target.getAttribute("data");
     // validate the guess first to run the rest of the game
     if (hangMan.validGuess(hangMan.charsGuessed,hangMan.userGuess)) {
@@ -215,12 +235,16 @@ var hangMan = {
       if (hangMan.checkWord()) {
         // if its correct reveal the characters, otherwise alert
         hangMan.displayLetters();
-      } else alert("Good God son people can see you!");
+      } else {
+          var wrong = hangMan.FailResponses[hangMan.failChances];
+          document.getElementById("result").innerHTML = wrong;
+      }
     }
     // check to see if the game is over and show the result.
     if ((hangMan.victory()) || (hangMan.gameOver())){
         hangMan.displayResult();
-        var playAgain = document.getElementByClassName("entireContent");
+            console.log(playAgain);
+
         playAgain.addEventListener("click",function(){
           var myNode = document.getElementById("result");
           var myNode2 = document.getElementById("placeHolder");

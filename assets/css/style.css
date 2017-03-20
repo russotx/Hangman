@@ -141,13 +141,35 @@ h2 {
 
 @media screen and (max-width: 560px) {
 
-h1,
-#result {
+h1 {
   font-weight: 600;
   font-size: 3em;
   text-align: center;
   font-family: 'Special Elite';
   color: #46331f;
+  line-height: .9;
+}
+
+#result {
+  font-weight: 600;
+  font-size: 1em;
+  text-align: center;
+  font-family: 'Special Elite';
+  color: #46331f;
+}
+
+#swansonRight {
+  display: none;
+}
+
+header {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  font-size: 1em;
 }
 
 h2 {
