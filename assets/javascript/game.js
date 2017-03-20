@@ -1,7 +1,21 @@
 var hangMan = {
 
   //------Game Data---------
-  "wordBank": ["Willie Nelson","Johnny Cash","Waylon Jennings"],
+  "wordBank":
+  ["Self Reliance",
+  "Bobby Knight",
+  "Capitalism",
+  "Lagavulin",
+  "Bacon",
+  "Ground Chuck",
+  "Brunettes",
+  "Breakfast Foods",
+  "Buffets Quantity Over Quality",
+  "Frankness",
+  "Old Wooden Sailing Ships",
+  "Cabins",
+  "One Rage Every Three Months",
+  "Firm Dry Solid Handshakes"],
   // number of wrong guesses allowed
   "failChances": 0,
   // array of the chars user has guessed
@@ -89,12 +103,10 @@ var hangMan = {
   //-- pass it the search bank and a character  */
  "checkWord": function() {
     if (this.searchBank.hasOwnProperty(this.userGuess)) {
-      console.log("chars correct begin of checkword = "+this.charsCorrect);
       // if the guess is correct add the length of the searchbank array -1 to the characters guessed
       // running total for matching to conclude victory. -1 because first index of array is
       // equal to the character.
       this.charsCorrect+=(this.searchBank[this.userGuess]).length-1;
-      console.log("chars correct after increment = "+this.charsCorrect);
       return true;
     } else {
       this.failChances--;
@@ -106,29 +118,17 @@ var hangMan = {
   //--- adding it to the wordsUsed array.
   "grabWord": function(anArray) {
     var theGet = this.randomWord(anArray);
-    console.log("the word picked "+theGet);
     if (this.wordsUsed.indexOf(theGet) != -1) {
-      console.log("already used that word");
       return this.grabWord(anArray);
     } else {
-        console.log("the word hadn't been used yet.");
         this.wordsUsed.push(theGet);
-        console.log("first index of wordsUsed "+this.wordsUsed[0]);
-        console.log(typeof this.wordsUsed[0]);
         this.theWord=theGet.toString();
-        console.log("the word of the game is "+this.theWord);
     }
   },
-
-  //--- initialize all the game variables and set up the search bank for
-  //--- testing user guesses
-
-
 
   //--- adds the guess to the list of chars already guessed
   "processGuess": function() {
         this.charsGuessed.push(this.userGuess);
-        console.log("userGuess = "+this.userGuess);
   },
 
   "gameOver": function() {
@@ -140,7 +140,6 @@ var hangMan = {
   },
 
   //--- returns true if number of correct guesses = number of chars that aren't spaces
-  //
   "victory": function() {
     if (this.charsCorrect === this.searchBank.trueChars) {
       return true;
@@ -173,25 +172,19 @@ var hangMan = {
   "displayLetters": function() {
     // grab the placeholder div
     var thePlaceholder = document.getElementById("placeHolder");
-    console.log("thePlaceholder = "+thePlaceholder);
     var iChar = this.userGuess;
-    console.log("iChar = "+this.userGuess);
     // get the array of indexes from the object at property matching user guess
     var arrayOfIndices = this.searchBank[iChar];
-    console.log("array of indices to replace with letters = "+arrayOfIndices);
     // get number of occurences of the user guess, -1 bcz first index is the char itself
     var numOfOccur = (arrayOfIndices.length)-1;
-    console.log("number of time char in word = "+numOfOccur);
     // get the indices of the matching letter from the searchBank
     // start x at 1 because index 0 contains the character
     for (var x = 1; x <= numOfOccur; x++)
     {
       // set the targetvalue to index recorded in index x of the array
       var targetValue = arrayOfIndices[x];
-      console.log(targetValue);
       // set replacespace to the doc space that has a data attr matching the guess
       var replaceSpace = document.querySelector('div[data="'+targetValue+'"]');
-      console.log(document.querySelector('div[data="'+targetValue+'"]'));
       // build the new node with the user guess step by step
       var revealChar = document.createElement("h2");
       var theKeyNode = document.createTextNode(iChar);
@@ -199,71 +192,67 @@ var hangMan = {
       // replace the spaceholder with the character
       replaceSpace.parentNode.replaceChild(revealChar,replaceSpace);
     }
-    console.log("done with displaying letters");
   },
 
   "displayResult": function() {
-    var youWinBro = "You Win Bro!";
-    var sorryBro = "Awww, words are hard.";
+    var youWin = "You did a fine job son.";
+    var youLose = "People are idiots.";
     if (this.victory()) {
-      document.getElementById("result").innerHTML = youWinBro;
+      document.getElementById("result").innerHTML = youWin;
     } else
-      document.getElementById("result").innerHTML = sorryBro;
+      document.getElementById("result").innerHTML = youLose;
   },
 
  "runAction": function(event) {
     // assign the data attribute of the key pressed to userGuess
     // data values are the same as the key letter
     hangMan.userGuess = event.target.getAttribute("data");
-    console.log(hangMan.userGuess);
     // validate the guess first to run the rest of the game
     if (hangMan.validGuess(hangMan.charsGuessed,hangMan.userGuess)) {
       // process the guess
-      console.log("guess is valid");
       hangMan.processGuess();
-      console.log("guess processed");
       // see if the guess is correct- if statement runs the function with side effects
       if (hangMan.checkWord()) {
         // if its correct reveal the characters, otherwise alert
         hangMan.displayLetters();
-        console.log("num of correct guessed = "+hangMan.charsCorrect);
-        console.log("correct chars needed = "+hangMan.searchBank.trueChars);
-      } else alert("sorry bro");
+      } else alert("Good God son people can see you!");
     }
     // check to see if the game is over and show the result.
     if ((hangMan.victory()) || (hangMan.gameOver())){
         hangMan.displayResult();
+        var playAgain = document.getElementByClassName("entireContent");
+        playAgain.addEventListener("click",function(){
+          var myNode = document.getElementById("result");
+          var myNode2 = document.getElementById("placeHolder");
+          while (myNode.firstChild) {
+            myNode.removeChild(myNode.firstChild);
+          }
+          while (myNode2.firstChild) {
+            myNode.removeChild(myNode.firstChild);
+          }
+          hangMan.gameInit();
+          hangMan.runAction
+        });
       }
   },
 
   "gameInit": function() {
       this.charsGuessed = [];
       this.charsCorrect = 0;
-      console.log("chars correct at game init = "+this.charsCorrect);
-      console.log("made it this far");
       this.grabWord(this.wordBank);
-      console.log("about to init searchBank with: "+this.theWord);
       this.searchBank = Object.assign({},(this.initSearchBank(this.theWord)));
-      console.log(this.searchBank);
       this.displayPlaceholders();
       this.failChances = 6;
     },
-
-  "testfunc": function(){
-    alert("this does work.");
-  },
 
   //--- ****** this drives everything: call to run the game ******
   "engine": function() {
     var keyboard = document.getElementById("keyboard");
     // initialize the game
     this.gameInit();
-    //console.log(this.theWord);
     // add event listener and run getGuess whenever letters are clicked
     keyboard.addEventListener("click",this.runAction);
-
   }
-
 };
 
 hangMan.engine();
