@@ -39,6 +39,8 @@ var hangMan = {
   "userGuess": "",
   // the search bank object
   "searchBank" : {},
+  // flag to signal this is a new round
+  "newRound" : true,
 
  //---------Object of Helper Functions for Game ------------
     //--- these functions have no side effects ----
@@ -135,6 +137,14 @@ var hangMan = {
   //--- returns the word for use in the round and flags it as used by
   //--- adding it to the wordsUsed array.
   "grabWord": function(anArray) {
+    var myNode = document.getElementById("result");
+    var myNode2 = document.getElementById("placeHolder");
+    while ((myNode)&&(myNode.firstChild)) {
+      myNode.removeChild(myNode.firstChild);
+    }
+    while ((myNode2)&&(myNode2.firstChild)) {
+      myNode2.removeChild(myNode2.firstChild);
+    }
     var theGet = this.randomWord(anArray);
     if (this.wordsUsed.indexOf(theGet) != -1) {
       return this.grabWord(anArray);
@@ -205,6 +215,7 @@ var hangMan = {
       var replaceSpace = document.querySelector('div[data="'+targetValue+'"]');
       // build the new node with the user guess step by step
       var revealChar = document.createElement("h2");
+      revealChar.setAttribute("class","correctLetter");
       var theKeyNode = document.createTextNode(iChar);
       revealChar.appendChild(theKeyNode);
       // replace the spaceholder with the character
@@ -217,52 +228,47 @@ var hangMan = {
     var youLose = "People are idiots. Good day sir.";
     if (this.victory()) {
       document.getElementById("result").innerHTML = youWin;
+      this.newRound = true;
     } else
       document.getElementById("result").innerHTML = youLose;
+      this.newRound = true;
   },
 
  "runAction": function(event) {
     // assign the data attribute of the key pressed to userGuess
     // data values are the same as the key letter
-    var playAgain = document.getElementsByClassName("entireContent");
-    console.log(playAgain);
     hangMan.userGuess = event.target.getAttribute("data");
-    // validate the guess first to run the rest of the game
-    if (hangMan.validGuess(hangMan.charsGuessed,hangMan.userGuess)) {
-      // process the guess
-      hangMan.processGuess();
-      // see if the guess is correct- if statement runs the function with side effects
-      if (hangMan.checkWord()) {
-        // if its correct reveal the characters, otherwise alert
-        hangMan.displayLetters();
-      } else {
-          var wrong = hangMan.FailResponses[hangMan.failChances];
-          document.getElementById("result").innerHTML = wrong;
+    // check to see if the user just lost or won and started a new round
+    // newRound is flagged true when hangMan object is created & when the game ends through
+    // running out of guesses or guessing the word correctly via displayResult method.
+    // gameInit makes newRound false again.
+    if (hangMan.newRound) {
+      hangMan.gameInit();
+    } else {
+      // validate the guess first to run the rest of the game
+      if (hangMan.validGuess(hangMan.charsGuessed,hangMan.userGuess)) {
+        // process the guess
+        hangMan.processGuess();
+        // see if the guess is correct- if statement runs the function with side effects
+        if (hangMan.checkWord()) {
+          // if its correct reveal the characters, otherwise alert
+          hangMan.displayLetters();
+        } else {
+            var wrong = hangMan.FailResponses[hangMan.failChances];
+            document.getElementById("result").innerHTML = wrong;
+        }
+      }
+      // check to see if the game is over and show the result.
+      if ((hangMan.victory()) || (hangMan.gameOver())){
+        hangMan.displayResult();
       }
     }
-    // check to see if the game is over and show the result.
-    if ((hangMan.victory()) || (hangMan.gameOver())){
-        hangMan.displayResult();
-            console.log(playAgain);
-
-        playAgain.addEventListener("click",function(){
-          var myNode = document.getElementById("result");
-          var myNode2 = document.getElementById("placeHolder");
-          while (myNode.firstChild) {
-            myNode.removeChild(myNode.firstChild);
-          }
-          while (myNode2.firstChild) {
-            myNode.removeChild(myNode.firstChild);
-          }
-          hangMan.gameInit();
-          hangMan.runAction
-        });
-      }
   },
 
   "gameInit": function() {
       this.charsGuessed = [];
       this.charsCorrect = 0;
+      this.newRound = false;
       this.grabWord(this.wordBank);
       this.searchBank = Object.assign({},(this.initSearchBank(this.theWord)));
       this.displayPlaceholders();

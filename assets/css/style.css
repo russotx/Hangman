@@ -172,6 +172,10 @@ button {
   font-size: 1em;
 }
 
+h2.correctLetter {
+  font-size: 2em;
+}
+
 h2 {
   font-family: 'Cousine', monospace;
   font-weight: 700;
@@ -179,6 +183,25 @@ h2 {
   line-height: .3;
   color: #46331f;
 }
+
+.letSpace {
+  width: 30px;
+  height: 3px;
+  background-color: #7C0090;
+  margin: 30px 2px;
+}
+
+
+.justSpace {
+  width: 30px;
+  height: 3px;
+  background-color: rgba(0,0,0,0);
+  margin: 30px 2px;
+}
+
+
+
+
 }
 
 
